@@ -1,6 +1,5 @@
 # This policy uses the Sentinel tfplan import to validate that no security group
-# rules have the CIDR "0.0.0.0/0".  It covers both the alicloud_security_group_rule and
-# the alicloud_security_group_rule resources.
+# rules have the CIDR "0.0.0.0/0".  It covers both the alicloud_security_group_rule.
 
 ##### Imports #####
 
@@ -54,6 +53,8 @@ validate_cidr_blocks = func() {
 
 	# Get all Ali security group rules
 	sgr_instances = find_resources_from_plan("alicloud_security_group_rule")
+
+	print(sgr_instances)
 
 	# Loop through the resource instances
 	for sgr_instances as address, r {
