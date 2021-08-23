@@ -83,11 +83,13 @@ validate_cidr_blocks = func() {
 			# before checking whether it contains "0.0.0.0/0"
 			if r.applied.type is "ingress" and
 				r.applied.cidr_ip else null is not null and
-				types.type_of(r.applied.cidr_ip) is "list" and
 				r.applied.cidr_ip contains "0.0.0.0/0" {
 				print("Security group rule", address, "of type ingress",
 					"contains disallowed cidr_ip 0.0.0.0/0")
 				validated = false
+			} else {
+				print("Security group rule", address, "of type ingress",
+					"contains disallowed cidr_ip 0.0.0.0/0")
 			}
 		} // end computed check
 
