@@ -91,6 +91,8 @@ validate_cidr_blocks = func() {
 		} // end computed check
 
 	} // end security group rule instances
+
+	return validated
 }
 ##### Rules #####
 
