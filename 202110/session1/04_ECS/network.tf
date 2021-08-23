@@ -28,6 +28,6 @@ resource "alicloud_security_group_rule" "ssh" {
   port_range        = "22/22"
   priority          = 1
   security_group_id = alicloud_security_group.group.id
-  // cidr_ip           = "0.0.0.0/0"
-  cidr_ip = "172.38.0.0/24"
+  cidr_ip           = "0.0.0.0/0"
+  // cidr_ip           = "172.38.0.0/24"
 }
