@@ -54,10 +54,10 @@ validate_cidr_blocks = func() {
 	# Get all Ali security group rules
 	sgr_instances = find_resources_from_plan("alicloud_security_group_rule")
 
-	print(sgr_instances)
-
 	# Loop through the resource instances
 	for sgr_instances as address, r {
+
+		print(r)
 
 		# Skip resources that are being destroyed
 		# to avoid unnecessary policy violations.
@@ -68,8 +68,8 @@ validate_cidr_blocks = func() {
 		}
 
 		# Determine if the attribute is computed
-		if (r.diff["type"].computed else false or
-			r.diff["cidr_ip.#"].computed else false) is
+		if (r.diff.type.computed else false or
+			r.diff.cidr_ip.computed else false) is
 			true {
 			print("Security group rule", address,
 				"has attributes, type and/or cidr_ip that are computed.")
@@ -82,9 +82,9 @@ validate_cidr_blocks = func() {
 			# We check that it is present and really a list
 			# before checking whether it contains "0.0.0.0/0"
 			if r.applied.type is "ingress" and
-				r.applied.cidr_blocks else null is not null and
+				r.applied.cidr_ip else null is not null and
 				types.type_of(r.applied.cidr_ip) is "list" and
-				r.applied.cidr_blocks contains "0.0.0.0/0" {
+				r.applied.cidr_ip contains "0.0.0.0/0" {
 				print("Security group rule", address, "of type ingress",
 					"contains disallowed cidr_ip 0.0.0.0/0")
 				validated = false
