@@ -89,12 +89,14 @@ validate_cidr_blocks = func() {
 				validated = false
 			} else {
 				print("Security group rule", address, "of type ingress",
-					"contains disallowed cidr_ip 0.0.0.0/0")
+					"contains cidr_ip", r.applied.cidr_ip)
+				print("validated", validated)		
 			}
 		} // end computed check
 
 	} // end security group rule instances
 
+	print("validated", validated)
 	return validated
 }
 ##### Rules #####
