@@ -1,0 +1,6 @@
+import "time"
+
+t = time.now
+
+is_weekday = rule { t.weekday_name not in ["Saturday", "Sunday"] }
+main = rule { is_weekday }

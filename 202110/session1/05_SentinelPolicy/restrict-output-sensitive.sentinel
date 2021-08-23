@@ -1,0 +1,12 @@
+import "tfconfig"
+
+check_outputs = func() {
+	for tfconfig.outputs as k, v {
+		if v.sensitive == false {
+			return false
+		}
+	}
+	return true
+}
+
+main = rule { check_outputs() }
