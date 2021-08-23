@@ -1,4 +1,4 @@
-vault_addr = "https://47.241.92.118:8200"
+vault_addr = "http://47.241.92.118:8200"
 ssh_mount_point = "ssh-otp"
 namespace = ""
 tls_skip_verify = true
