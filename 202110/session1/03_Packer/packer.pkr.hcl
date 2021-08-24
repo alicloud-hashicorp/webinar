@@ -1,11 +1,8 @@
 # packer build -force .
 
-variable "access_key" {
-  default = "LTAI5tCyNx9LYuQceMjDt88V"
-}
-
-variable "secret_key" {
-  default = "RB1suqxLF3hTZErIniKuqwuHroFV6g"
+locals {
+  access_key = vault("/kv-v2/data/alicloud", "access_key")
+  secret_key = vault("/kv-v2/data/alicloud", "secret_key")
 }
 
 variable "region" {
@@ -14,8 +11,8 @@ variable "region" {
 }
 
 source "alicloud-ecs" "basic-example" {
-  access_key           = var.access_key
-  secret_key           = var.secret_key
+  access_key           = local.access_key
+  secret_key           = local.secret_key
   region               = var.region
   image_name           = "ssh_otp_image_1_1"
   source_image         = "centos_7_9_x64_20G_alibase_20210623.vhd"
@@ -41,7 +38,7 @@ build {
       "mkdir -p /etc/vault.d",
       "cp /tmp/vault.hcl /etc/vault.d/vault.hcl",
       "cp /tmp/vault-ssh-helper /usr/bin/vault-ssh-helper",
-      "/usr/bin/vault-ssh-helper -verify-only -config=/etc/vault.d/vault.hcl",
+      "/usr/bin/vault-ssh-helper -verify-only -config=/etc/vault.d/vault.hcl -dev",
       "sudo adduser test",
       "echo password | passwd --stdin test",
       "echo 'test ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers",
