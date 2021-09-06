@@ -69,8 +69,7 @@ validate_cidr_blocks = func() {
 
 		# Determine if the attribute is computed
 		if (r.diff.type.computed else false or
-			r.diff.cidr_ip.computed else false) is
-			true {
+			r.diff.cidr_ip.computed else false) is true {
 			print("Security group rule", address,
 				"has attributes, type and/or cidr_ip that are computed.")
 			# If you want computed values to cause the policy to fail,
@@ -81,6 +80,7 @@ validate_cidr_blocks = func() {
 			# Since cidr_blocks is optional and could be computed,
 			# We check that it is present and really a list
 			# before checking whether it contains "0.0.0.0/0"
+			print(r.applied)
 			if r.applied.type is "ingress" and
 				r.applied.cidr_ip else null is not null and
 				r.applied.cidr_ip is "0.0.0.0/0" {
