@@ -4,5 +4,5 @@ variable "region" {
 }
 
 variable "name" {
-  default = "test"
+  default = "hashicorp-ack"
 }

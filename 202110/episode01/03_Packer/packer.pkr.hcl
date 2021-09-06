@@ -14,7 +14,7 @@ source "alicloud-ecs" "basic-example" {
   access_key           = local.access_key
   secret_key           = local.secret_key
   region               = var.region
-  image_name           = "ssh_otp_image_1_1"
+  image_name           = "ssh_otp_image_1_4"
   source_image         = "centos_7_9_x64_20G_alibase_20210623.vhd"
   ssh_username         = "root"
   instance_type        = "ecs.n1.tiny"
@@ -31,6 +31,7 @@ build {
     destination = "/tmp"
   }
 
+# Vault
   provisioner "shell" {
     inline = [
       "cp /tmp/sshd /etc/pam.d/sshd",
@@ -45,4 +46,25 @@ build {
       "sudo sed -ie 's/SELINUX=enforcing/SELINUX=disabled /g' /etc/selinux/config"
     ]
   }
+
+# Apache
+  provisioner "shell" {
+    inline = [
+      "sudo yum -y update",
+      "sleep 15",
+      "sudo yum -y update",
+      "sudo yum -y install httpd",
+      "sudo systemctl enable httpd",
+      "sudo systemctl start httpd",
+      "chmod +x /tmp/deploy_app.sh",
+      "PLACEHOLDER=${var.placeholder} WIDTH=600 HEIGHT=800 PREFIX=gs /tmp/deploy_app.sh",
+      # "sudo firewall-cmd --zone=public --permanent --add-port=80/tcp",
+      # "sudo firewall-cmd --reload",
+    ]
+  }
+}
+
+variable "placeholder" {
+  default     = "placekitten.com"
+  description = "Image-as-a-service URL. Some other fun ones to try are fillmurray.com, placecage.com, placebeard.it, loremflickr.com, baconmockup.com, placeimg.com, placebear.com, placeskull.com, stevensegallery.com, placedog.net"
 }

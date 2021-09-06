@@ -7,7 +7,7 @@ policy "restrict-output-sensitive" {
 }
 
 policy "restrict-ingress-sg-rule-cidr-blocks" {
-    enforcement_level = "advisory"
+    enforcement_level = "soft-mandatory"
 }
 
 # policy "verifying-cost" {

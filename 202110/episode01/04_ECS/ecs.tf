@@ -9,8 +9,8 @@ data "alicloud_instance_types" "normal" {
 }
 
 resource "alicloud_instance" "test" {
-  count = 1
-  security_groups   = alicloud_security_group.group.*.id
+  count           = var.instance_count
+  security_groups = alicloud_security_group.group.*.id
 
   # series III
   instance_type              = data.alicloud_instance_types.normal.ids.0

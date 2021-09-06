@@ -9,10 +9,10 @@ data "alicloud_zones" "default" {
 }
 
 resource "alicloud_vswitch" "vswitch" {
-  vpc_id            = alicloud_vpc.vpc.id
-  cidr_block        = "172.38.0.0/24"
-  zone_id           = data.alicloud_zones.default.zones[0].id
-  vswitch_name      = var.name
+  vpc_id       = alicloud_vpc.vpc.id
+  cidr_block   = "172.38.0.0/24"
+  zone_id      = data.alicloud_zones.default.zones[0].id
+  vswitch_name = var.name
 }
 
 resource "alicloud_security_group" "group" {
@@ -21,8 +21,8 @@ resource "alicloud_security_group" "group" {
 }
 
 resource "alicloud_security_group_rule" "ssh" {
-  type              = "ingress"
-  ip_protocol       = "tcp"
+  type        = "ingress"
+  ip_protocol = "tcp"
   // nic_type          = "internet"
   policy            = "accept"
   port_range        = "22/22"

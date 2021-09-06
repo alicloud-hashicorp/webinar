@@ -7,20 +7,20 @@ terraform {
     organization = "great-stone-biz"
 
     workspaces {
-      name = "alibaba-session1-ecs"
+      name = "alibaba-session1-slb"
     }
   }
   required_providers {
     alicloud = {
-      source = "aliyun/alicloud"
+      source  = "aliyun/alicloud"
       version = ">= 1.131"
     }
   }
 }
 
 provider "alicloud" {
-  profile                 = "gslee"
-  access_key = "${var.access_key}"
-  secret_key = "${var.secret_key}"
-  region     = "${var.region}"
+  profile    = "gslee"
+  access_key = var.access_key
+  secret_key = var.secret_key
+  region     = var.region
 }
