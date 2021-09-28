@@ -4,9 +4,16 @@ variable "region" {
 }
 
 variable "name" {
-  default = "hashicorp-slb"
+  default = "hashicorp-ecs"
 }
 
 variable "ip_version" {
   default = "ipv4"
 }
+
+variable "instance_count" {
+  default = 0
+}
+
+variable "access_key" {}
+variable "secret_key" {}

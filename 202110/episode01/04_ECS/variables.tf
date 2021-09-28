@@ -14,3 +14,6 @@ variable "ip_version" {
 variable "instance_count" {
   default = 0
 }
+
+variable "access_key" {}
+variable "secret_key" {}
