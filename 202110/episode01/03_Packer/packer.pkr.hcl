@@ -14,7 +14,7 @@ source "alicloud-ecs" "basic-example" {
   access_key           = local.access_key
   secret_key           = local.secret_key
   region               = var.region
-  image_name           = "ssh_otp_image_1_4"
+  image_name           = "ssh_otp_image_1_5"
   source_image         = "centos_7_9_x64_20G_alibase_20210623.vhd"
   ssh_username         = "root"
   instance_type        = "ecs.n1.tiny"
@@ -31,7 +31,7 @@ build {
     destination = "/tmp"
   }
 
-# Vault
+# Vault OTP
   provisioner "shell" {
     inline = [
       "cp /tmp/sshd /etc/pam.d/sshd",

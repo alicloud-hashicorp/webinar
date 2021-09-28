@@ -16,6 +16,7 @@ provider "alicloud" {
   region     = "${var.region}"
 }
 
+
 data "alicloud_instance_types" "c2g4" {
   cpu_core_count = 2
   memory_size    = 4

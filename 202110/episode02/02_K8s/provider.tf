@@ -6,7 +6,7 @@ terraform {
     organization = "great-stone-biz"
 
     workspaces {
-      name = "alibaba-session2-k8s"
+      name = "alibaba-session2-02-k8s"
     }
   }
   required_providers {
@@ -23,7 +23,7 @@ data "terraform_remote_state" "ack" {
   config = {
     organization = "great-stone-biz"
     workspaces = {
-      name = "alibaba-session2-ack"
+      name = "alibaba-session2-01-ack"
     }
   }
 }

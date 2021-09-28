@@ -6,3 +6,6 @@ variable "region" {
 variable "name" {
   default = "devsecops"
 }
+
+variable "access_key" {}
+variable "secret_key" {}

@@ -7,7 +7,7 @@ terraform {
     organization = "great-stone-biz"
 
     workspaces {
-      name = "alibaba-session2-ack"
+      name = "alibaba-session2-01-ack"
     }
   }
   required_providers {
