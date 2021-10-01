@@ -11,17 +11,17 @@ resource "alicloud_security_group" "group" {
   vpc_id = data.alicloud_vswitches.default.vswitches.0.vpc_id
 }
 
-// resource "alicloud_security_group_rule" "default" {
-//   for_each = local.ingress_port
-//   type        = "ingress"
-//   ip_protocol = "tcp"
-//   // nic_type          = "internet"
-//   policy            = "accept"
-//   port_range        = each.key
-//   priority          = 1
-//   security_group_id = alicloud_security_group.group.id
-//   cidr_ip           = "0.0.0.0/0"
-// }
+resource "alicloud_security_group_rule" "default" {
+  for_each    = local.ingress_port
+  type        = "ingress"
+  ip_protocol = "tcp"
+  // nic_type          = "internet"
+  policy            = "accept"
+  port_range        = each.key
+  priority          = 1
+  security_group_id = alicloud_security_group.group.id
+  cidr_ip           = "0.0.0.0/0"
+}
 
 data "alicloud_instance_types" "c4g8" {
   cpu_core_count = 4
@@ -50,7 +50,10 @@ resource "alicloud_instance" "server" {
   vswitch_id                 = data.alicloud_vswitches.default.ids.0
   internet_max_bandwidth_out = 10
   password                   = random_password.password.result
-  user_data                  = <<EOF
+  tags = {
+    type = "consul-nomad-server"
+  }
+  user_data = <<EOF
 #!/bin/bash
 sudo yum update -y
 sudo yum install -y yum-utils
@@ -99,10 +102,11 @@ EOF
 }
 
 resource "alicloud_instance" "client" {
-  depends_on = [alicloud_instance.server]
-  count = 1
+  depends_on      = [alicloud_instance.server]
+  count           = 0
   security_groups = alicloud_security_group.group.*.id
 
+  host_name = "client-${count.index}"
   instance_type              = data.alicloud_instance_types.c4g8.ids.0
   system_disk_category       = "cloud_efficiency"
   system_disk_name           = "${var.name}-client-${count.index}"
@@ -167,4 +171,26 @@ sudo systemctl start consul
 sudo systemctl start docker
 sudo systemctl start nomad
 EOF
+}
+
+data "alicloud_images" "consul_nomad" {
+  most_recent = true
+  name_regex  = "^episode02-consul-nomad"
+}
+
+resource "alicloud_instance" "client_packer" {
+  depends_on      = [alicloud_instance.server]
+  count           = 0
+  security_groups = alicloud_security_group.group.*.id
+
+  host_name = "client-packer-${count.index}"
+  instance_type              = data.alicloud_instance_types.c4g8.ids.0
+  system_disk_category       = "cloud_efficiency"
+  system_disk_name           = "${var.name}-client-packer-${count.index}"
+  system_disk_size           = 50
+  image_id                   = data.alicloud_images.consul_nomad.ids.0
+  instance_name              = "${var.name}-client-packer-${count.index}"
+  vswitch_id                 = data.alicloud_vswitches.default.ids.0
+  internet_max_bandwidth_out = 10
+  password                   = random_password.password.result
 }

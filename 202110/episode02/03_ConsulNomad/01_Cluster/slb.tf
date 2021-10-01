@@ -9,8 +9,8 @@ resource "alicloud_slb_load_balancer" "haproxy" {
 }
 
 resource "alicloud_slb_backend_server" "haproxy" {
-  depends_on = [alicloud_instance.client]
-  count = length(alicloud_instance.client.*) > 0 ? 1 : 0
+  depends_on       = [alicloud_instance.client, alicloud_instance.client_packer]
+  count            = length(concat(alicloud_instance.client, alicloud_instance.client_packer)) > 0 ? 1 : 0
   load_balancer_id = alicloud_slb_load_balancer.haproxy.id
 
   dynamic "backend_servers" {
@@ -20,16 +20,24 @@ resource "alicloud_slb_backend_server" "haproxy" {
       weight    = 100
     }
   }
+
+  dynamic "backend_servers" {
+    for_each = alicloud_instance.client_packer.*.id
+    content {
+      server_id = backend_servers.value
+      weight    = 100
+    }
+  }
 }
 
 resource "alicloud_slb_listener" "haproxy" {
-  load_balancer_id          = alicloud_slb_load_balancer.haproxy.id
-  backend_port              = 8080
-  frontend_port             = 80
-  protocol                  = "tcp"
-  bandwidth                 = 10
-  sticky_session            = "on"
-  sticky_session_type       = "insert"
+  load_balancer_id    = alicloud_slb_load_balancer.haproxy.id
+  backend_port        = 8080
+  frontend_port       = 80
+  protocol            = "tcp"
+  bandwidth           = 10
+  sticky_session      = "on"
+  sticky_session_type = "insert"
   x_forwarded_for {
     retrive_slb_ip = true
     retrive_slb_id = true
@@ -39,13 +47,13 @@ resource "alicloud_slb_listener" "haproxy" {
 }
 
 resource "alicloud_slb_listener" "stats" {
-  load_balancer_id          = alicloud_slb_load_balancer.haproxy.id
-  backend_port              = 1936
-  frontend_port             = 1936
-  protocol                  = "tcp"
-  bandwidth                 = 10
-  sticky_session            = "on"
-  sticky_session_type       = "insert"
+  load_balancer_id    = alicloud_slb_load_balancer.haproxy.id
+  backend_port        = 1936
+  frontend_port       = 1936
+  protocol            = "tcp"
+  bandwidth           = 10
+  sticky_session      = "on"
+  sticky_session_type = "insert"
   x_forwarded_for {
     retrive_slb_ip = true
     retrive_slb_id = true
